@@ -1,0 +1,41 @@
+services:
+  dvwa:
+    image: vulnerables/web-dvwa
+    container_name: dvwa
+    environment:
+      - MYSQL_HOST=db
+      - MYSQL_USER=app
+      - MYSQL_PASSWORD=password
+      - MYSQL_DB=dvwa
+    ports:
+      - "89:80"
+    depends_on:
+      - db
+    volumes:
+      - dvwa_config:/var/www/html/config
+      - dvwa_uploads:/var/www/html/hackable/uploads
+      - dvwa_phpids:/var/www/html/external/phpids/0.6/lib/IDS/tmp
+      - ./php.ini:/etc/php/7.0/apache2/php.ini   # Mount custom php.ini
+    restart: unless-stopped
+
+  db:
+    image: mysql:8
+    container_name: dvwa_db
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: dvwa
+      MYSQL_USER: app
+      MYSQL_PASSWORD: your_password_here
+    volumes:
+      - db_data:/var/lib/mysql
+    restart: unless-stopped
+
+volumes:
+  dvwa_config:
+  dvwa_uploads:
+  dvwa_phpids:
+  db_data:
+
+
+# Default Login: Once DVWA is up and running, access it via http://localhost:89, and use admin as the username and password as the password.
+# After logging in, navigate to the DVWA Security tab, where you can update passwords if needed.
