@@ -29,8 +29,6 @@ services:
     volumes:
       - db_data:/var/lib/mysql
     restart: unless-stopped
-    ports:
-      - "6034:3306"
 
 volumes:
   dvwa_config:
