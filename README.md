@@ -121,6 +121,22 @@ This exercise demonstrates how brute force attacks attempt to guess passwords by
      ```
 
 6. **Use Hydra to Perform the Attack**:
+
+Note we need to install hydra 
+
+in Ubuntu/debian run the following command 
+sudo apt update
+sudo apt install hydra -y
+
+You can also do it in WSL ubuntu 
+
+sudo apt update
+sudo apt install hydra -y
+
+Verify Installation
+
+hydra -h
+
    - Open a terminal and run the following Hydra command to brute force the login:
      ```bash
      hydra -l admin -P passwords.txt localhost http-post-form "/vulnerabilities/brute/:username=^USER^&password=^PASS^:Login failed"

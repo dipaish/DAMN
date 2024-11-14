@@ -38,4 +38,3 @@ volumes:
 
 
 # Default Login: Once DVWA is up and running, access it via http://localhost:89, and use admin as the username and password as the password.
-# After logging in, navigate to the DVWA Security tab, where you can update passwords if needed.
