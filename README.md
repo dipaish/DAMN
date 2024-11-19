@@ -361,3 +361,20 @@ Use parameterized queries instead of directly concatenating user inputs into SQL
 | **Time-Based Blind**      | `1' AND IF(1=1, SLEEP(5), null) --`        | Delays server response if the condition is true to confirm successful injection.                 | A 5-second delay indicates successful injection.                                                                                             |
 | **Stacked Queries**       | `1'; DROP TABLE users --`                  | Executes multiple SQL statements in one query, often leading to destructive actions.             | Deletes the `users` table if stacking is allowed.                                                                                            |
 | **Second-Order**          | `test' --`                                 | Injects SQL during one interaction (e.g., registration) and exploits it in another (e.g., login). | Register with `test' --` and then log in as `test` to bypass authentication or manipulate other queries.                              
+
+# Various types of attacks in the Damn Vulnerable Web App (DVWA)
+
+| **Attack Type**         | **Description**                                                                 |
+|--------------------------|---------------------------------------------------------------------------------|
+| **SQL Injection**        | Exploits vulnerabilities in SQL queries to manipulate databases or extract data.|
+| **Command Injection**    | Executes arbitrary commands on the host server via vulnerable input fields.     |
+| **File Inclusion**       | Includes unauthorized files on the server, leading to data leakage or code execution. |
+| **Cross-Site Scripting (XSS)** | Injects malicious scripts into web pages viewed by other users.                   |
+| **Cross-Site Request Forgery (CSRF)** | Tricks authenticated users into performing unwanted actions on a website.   |
+| **File Upload**          | Exploits weak file validation mechanisms to upload malicious files.             |
+| **Broken Authentication**| Attacks that exploit weak or poorly implemented authentication mechanisms.      |
+| **Insecure Cryptographic Storage** | Compromises sensitive data through weak or flawed encryption methods.       |
+| **Security Misconfiguration** | Leverages poorly configured settings to gain unauthorized access.               |
+| **Brute Force**          | Systematically guesses passwords or keys to gain unauthorized access.           |
+| **Unvalidated Redirects and Forwards** | Exploits unvalidated redirects to redirect users to malicious websites.   |
+| **Shell Injection**      | Executes shell commands on the server, compromising its integrity.              |
