@@ -1,0 +1,9 @@
+{
+    "name": "DAMN Vulnerable App - Dev Container",
+    "dockerComposeFile": ["../docker-compose.yml"],
+    "service": "db",
+    "workspaceFolder": "/workspace",
+    "mounts": [
+      "source=${localWorkspaceFolder}/workspace,target=/workspace,type=bind,consistency=cached"
+    ]
+  }
