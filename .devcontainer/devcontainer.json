@@ -2,7 +2,7 @@
     "name": "DAMN Vulnerable App - Dev Container",
     "dockerComposeFile": ["docker-compose.yml"],
     "service": "db",
-    "workspaceFolder": "/workspace",
+    "workspaceFolder": "/",
    "remoteEnv": {
         "MYSQL_HOST": "db",
         "MYSQL_USER": "app",
@@ -10,6 +10,6 @@
         "MYSQL_DB": "dvwa"
   },
     "mounts": [
-      "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached"
+      "source=${localWorkspaceFolder}/workspace,target=/workspace,type=bind,consistency=cached"
     ]
   }
