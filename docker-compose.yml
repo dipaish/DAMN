@@ -25,7 +25,7 @@ services:
       MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: dvwa
       MYSQL_USER: app
-      MYSQL_PASSWORD: your_password_here
+      MYSQL_PASSWORD: password
     volumes:
       - db_data:/var/lib/mysql
     restart: unless-stopped
