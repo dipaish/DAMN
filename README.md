@@ -5,6 +5,15 @@
 - Alternatively, you can use the link provided in the chatbox to access the materials.
 ![qr code](images/qrCode_DamnWebApp.png)
 
+# 📝 Outline for the Session
+
+- 📚 **Basic Introduction to Database & SQL Injection**
+- 🛠️ **Practical Demo with Damn Vulnerable Web Application (DVWA)**
+- 💬 **Q&A / Discussion**
+- 🙋‍♂️ **Feel Free to Type or Ask Questions During the Session!**
+
+**We’re here to learn, share, and explore together. Let’s make it interactive! 🚀**
+
 # Database Security - SQL Injection 
 
 ## What is a database? 
