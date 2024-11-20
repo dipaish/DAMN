@@ -117,6 +117,11 @@ Database Security refers to the **measures and technologies** used to protect a 
 
 ## What is SQL injection?
 
+![SQL Injection](https://www.cloudflare.com/img/learning/security/threats/sql-injection-attack/sql-injection-infographic.png)
+
+Img Src: https://www.cloudflare.com/img/learning/security/threats/sql-injection-attack/sql-injection-infographic.png
+
+
 - It is a type of cyberattack where an attacker manipulates a web application’s SQL query by injecting malicious input into input fields (e.g., login forms, search bars)
 - **How it works?**
    - Vulnerable Query: A web application executes SQL queries using user inputs without proper validation or sanitization. ```SELECT * FROM users WHERE username = 'input' AND password = 'input';```
