@@ -2,14 +2,10 @@
 
 ## **QR Code for Accessing Materials**
 
-<div style="display: flex; justify-content: space-between; align-items: flex-start;">
-  <div>
-    - Scan the QR code below to access the materials quickly and conveniently.  <br>
-    - Alternatively, you can use the link provided in the chatbox to access the materials.
-  </div>
-  <img src="images/qrCode_DamnWebApp.png" alt="QR Code" width="150" style="margin-left: 20px;">
-</div>
+- **Scan the QR code to access the materials quickly and conveniently.**  
+- **Alternatively, you can use the link provided in the chatbox to access the materials.**
 
+  <img src="images/qrCode_DamnWebApp.png" alt="QR Code" width="150">
 
 # 📝 Outline for the Session
 
