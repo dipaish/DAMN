@@ -136,7 +136,7 @@ The Damn Vulnerable Web Application (DVWA) is designed to help students practice
 
 ***Warning: DVWA is intentionally insecure! Do not upload or deploy it on any publicly accessible server or web hosting service. If exposed to the internet, it will almost certainly be compromised***
 
-# Setting Up DVWA with Docker
+# Setting Up DVWA with Docker (locally in your personal device)
 
 You can set up DVWA (Damn Vulnerable Web Application) by forking this repository to your GitHub account and then cloning it to your local environment. This repository includes a custom `php.ini` file to ensure that all necessary PHP configurations are met for the DVWA environment.
 
@@ -178,7 +178,33 @@ You can set up DVWA (Damn Vulnerable Web Application) by forking this repository
 - **Security Warning**: DVWA is intentionally vulnerable. **Do not deploy this on any publicly accessible server**.
 
 
+# Setting Up DVWA Using GitHub Codespaces  
 
+## Installation Steps
+
+1. **Fork the Repository**
+   - Navigate to the [DVWA GitHub repository](https://github.com/dipaish/DAMN) and click the **Fork** button to create a copy of the repository under your own GitHub account.
+
+2. **Create a Codespace**
+   - Go to your forked repository in your GitHub account.
+   - Click on the **Code** button, then switch to the **Codespaces** tab.
+   - Click the **+** button to create a new Codespace.
+![how to create codespace](images/codeSpace1.png)
+
+3. **Run the Application**
+   - Once inside the Codespace, open the terminal.
+   - Run the following command to start the required services:
+     ```bash
+     docker-compose up -d
+     ```
+![running the app](images/codesSpace2.png)
+4. **Access the Application**
+   - The necessary ports will typically open automatically.
+   - If port 80 (or 89) does not open:
+     - Navigate to the **Ports** tab in Codespaces.
+     - Find the port associated with DVWA and click to open it in your browser.
+
+![running the app](images/codeSpace3.png)
 
 ## Practical Tasks 
 
