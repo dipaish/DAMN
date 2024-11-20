@@ -3,6 +3,7 @@
 **QR Code for Accessing Materials**
 - Scan the QR code below to access the materials quickly and conveniently.
 - Alternatively, you can use the link provided in the chatbox to access the materials.
+
 ![qr code](images/qrCode_DamnWebApp.png)
 
 # 📝 Outline for the Session
