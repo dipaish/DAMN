@@ -208,6 +208,9 @@ You can set up DVWA (Damn Vulnerable Web Application) by forking this repository
    - If port 80 (or 89) does not open:
      - Navigate to the **Ports** tab in Codespaces.
      - Find the port associated with DVWA and click to open it in your browser.
+   - Log in with username as admin and password as password. 
+   - Click on Create/Reset Database
+   - After a while, it will take you back to the login screen, login again. **Your application is ready.**
 
 ![running the app](images/codeSpace3.png)
 
@@ -218,7 +221,7 @@ You can set up DVWA (Damn Vulnerable Web Application) by forking this repository
 This exercise will help you understand how SQL Injection works and explore methods to prevent it.
 
 1. **Access DVWA**:
-   - Open your browser and navigate to `http://localhost:89`.
+   - Open your browser and navigate to `http://localhost:89` in localdevice, in Github codespacem you can click on the link under ports.
 
 2. **Log In to DVWA**:
    - Use the credentials: **Username**: `admin`, **Password**: `password`.
